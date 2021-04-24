@@ -1,0 +1,21 @@
+---
+swagger: '2.0'
+info:
+  description: This is a simple Ice Information Center Api
+  version: 1.0.0
+  title: OpenAPI Ice Information Service
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: icy
+    description: Everything about your icecream
+schemes:
+  - http
+paths:
+  /icy:
+    get:
+      responses:
+        '200':
+          description: Success
