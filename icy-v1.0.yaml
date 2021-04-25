@@ -68,8 +68,10 @@ components:
       properties:
         name:
           type: string
+        subtype:
+          type: string
       discriminator:
-        propertyName: name
+        propertyName: subtype
     SorbetType:
       allOf:
         - $ref: '#/components/schemas/CategoryType'

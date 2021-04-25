@@ -43,11 +43,15 @@ interface IceMapper {
         }
         return result;
     }
-    @Mapping(target = "name", constant = "SorbetType")
+
+    @Mapping(target = "name", expression = "java(category.getName())")
+    @Mapping(target = "subtype", constant = "SorbetType")
     SorbetType toResource(Sorbet category);
-    @Mapping(target = "name", constant = "WaterType")
+    @Mapping(target = "name", expression = "java(category.getName())")
+    @Mapping(target = "subtype", constant = "WaterType")
     WaterType toResource(Water category);
-    @Mapping(target = "name", constant = "CreamType")
+    @Mapping(target = "name", expression = "java(category.getName())")
+    @Mapping(target = "subtype", constant = "CreamType")
     CreamType toResource(Cream category);
 
     default Category toCategory(CategoryType categoryType){

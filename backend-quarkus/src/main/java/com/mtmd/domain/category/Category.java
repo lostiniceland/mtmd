@@ -26,5 +26,7 @@ public abstract class Category
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public abstract String getName();
 }
 

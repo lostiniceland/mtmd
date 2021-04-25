@@ -93,8 +93,10 @@ public class MainView extends VerticalLayout {
 
         H2 headerAll = new H2("All types of ice-cream");
 
-        Grid<IceType> allIceGrid = new Grid<>(IceType.class);
+        Grid<IceType> allIceGrid = new Grid<>();
         allIceGrid.setItems(service.loadIce());
+        allIceGrid.addColumn(IceType::getName).setHeader("Name");
+        allIceGrid.addColumn(i -> i.getCategory().getName()).setHeader("Category");
 
 
         add(headerNew, name, category, foodintolerances, nutrition, purchasePrice, retailPrice, button);

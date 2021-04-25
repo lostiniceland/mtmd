@@ -23,4 +23,9 @@ public final class Water extends Category {
     public List<String> getFlavourAdditive(){
         return Collections.unmodifiableList(flavourAdditive);
     }
+
+    @Override
+    public String getName() {
+        return "Water";
+    }
 }

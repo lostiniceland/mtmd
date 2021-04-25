@@ -18,4 +18,9 @@ public final class Cream extends Category {
     public int getCreamInPercent() {
         return creamInPercent;
     }
+
+    @Override
+    public String getName() {
+        return "Cream";
+    }
 }

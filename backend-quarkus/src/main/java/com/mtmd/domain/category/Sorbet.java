@@ -30,4 +30,9 @@ public final class Sorbet extends Category {
     public List<String> getFruits() {
         return Collections.unmodifiableList(fruits);
     }
+
+    @Override
+    public String getName() {
+        return "Sorbet";
+    }
 }
