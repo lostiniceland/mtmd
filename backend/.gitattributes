@@ -1,0 +1,7 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Make sure all .sql files are configured with linux line-endings because it can
+# break Flyway when a remote migration is done from different dev-machines
+# Flyways keeps a hash of the sql-files to know what was executed. This includes LF.
+*.sql text eol=lf
