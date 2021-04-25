@@ -1,10 +1,6 @@
 package com.mtmd.application;
 
-import com.mtmd.domain.IngredientRepository;
 import com.mtmd.domain.category.Cream;
-import com.mtmd.domain.Ice;
-import com.mtmd.domain.IceRepository;
-import com.mtmd.domain.Ingredient;
 import com.mtmd.domain.category.Sorbet;
 import com.mtmd.domain.category.Water;
 import io.quarkus.runtime.StartupEvent;

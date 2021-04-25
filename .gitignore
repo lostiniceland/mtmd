@@ -1,37 +1,43 @@
 # Gradle
-.gradle/
-build/
-gen/
+**/.gradle/
+**/build/
+**/gen/
+
+
+# Vue
+**/node_modules/
+**/dist
+**/public
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
 
 # Eclipse
-.project
-.classpath
-.settings/
-bin/
+**/.project
+**/.classpath
+**/.settings/
+**/bin/
 
 # IntelliJ
-.idea
-*.ipr
-*.iml
-*.iws
-
-# NetBeans
-nb-configuration.xml
+**/.idea
+**/*.ipr
+**/*.iml
+**/*.iws
 
 # Visual Studio Code
-.vscode
-.factorypath
+**/.vscode
+**/.factorypath
 
 # OSX
-.DS_Store
+**/.DS_Store
 
 # Vim
-*.swp
-*.swo
+**/*.swp
+**/*.swo
 
 # patch
-*.orig
-*.rej
+**/*.orig
+**/*.rej
 
 # Local environment
-.env
+**/.env

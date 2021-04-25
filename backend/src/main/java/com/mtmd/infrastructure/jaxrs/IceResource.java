@@ -4,7 +4,6 @@ import com.mtmd.application.IceNotFoundException;
 import com.mtmd.application.IceService;
 import com.mtmd.domain.Ice;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -12,9 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Path("/ice")
 public class IceResource {

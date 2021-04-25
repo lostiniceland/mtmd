@@ -1,7 +1,5 @@
 package com.mtmd.domain.category;
 
-import com.mtmd.domain.Ice;
-
 import javax.persistence.*;
 import java.util.*;
 

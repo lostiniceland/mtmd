@@ -1,7 +1,5 @@
 package com.mtmd.domain.category;
 
-import com.mtmd.domain.BaseEntity;
-
 import javax.persistence.*;
 import java.util.Objects;
 

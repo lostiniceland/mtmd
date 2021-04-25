@@ -3,9 +3,7 @@ package com.mtmd.domain;
 import io.smallrye.common.constraint.NotNull;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public class Ingredient extends BaseEntity {
