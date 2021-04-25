@@ -1,9 +1,10 @@
 plugins{
     id("base")
+    id("war")
 }
-subprojects {
+allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
     }
-} 
+}

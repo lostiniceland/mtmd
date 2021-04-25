@@ -1,0 +1,9 @@
+{
+  "compatibilityMode": false,
+  "productionMode": false,
+  "npmFolder": "/home/marc/Development/projects/mtmd/frontend-vaadin",
+  "generatedFolder": "/home/marc/Development/projects/mtmd/frontend-vaadin/target/frontend",
+  "frontendFolder": "/home/marc/Development/projects/mtmd/frontend-vaadin/frontend",
+  "pnpm.enable": false,
+  "require.home.node": false
+}

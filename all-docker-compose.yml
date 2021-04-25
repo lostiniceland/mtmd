@@ -16,3 +16,10 @@ services:
       DB_HOST: postgres
     links:
       - postgres
+
+  frontend:
+    image: mtmd/vaadin-frontend
+    ports:
+      - 9080:9080
+    links:
+      - backend

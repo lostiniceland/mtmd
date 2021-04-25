@@ -8,6 +8,7 @@ cd backend-quarkus
 docker build -f src/main/docker/Dockerfile.jvm -t mtmd/quarkus-backend .
 # docker build -f src/main/docker/Dockerfile.native -t mtmd/quarkus-backend .
 cd ..
-# todo frontend
+
+./gradlew :frontend-vaadin:jibDockerBuild
 
 docker-compose -f all-docker-compose.yml up
