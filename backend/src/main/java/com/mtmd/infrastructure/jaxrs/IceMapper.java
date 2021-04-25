@@ -6,8 +6,10 @@ import com.mtmd.domain.category.Category;
 import com.mtmd.domain.category.Cream;
 import com.mtmd.domain.category.Sorbet;
 import com.mtmd.domain.category.Water;
+import com.mtmd.infrastructure.jaxrs.gen.types.*;
 import org.javamoney.moneta.Money;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import javax.money.Monetary;
@@ -41,8 +43,12 @@ interface IceMapper {
         }
         return result;
     }
+//    CategoryType toResource(Category category);
+    @Mapping(target = "name", constant = "Sorbet")
     SorbetType toResource(Sorbet category);
+    @Mapping(target = "name", constant = "Water")
     WaterType toResource(Water category);
+    @Mapping(target = "name", constant = "Cream")
     CreamType toResource(Cream category);
 
     default Category toCategory(CategoryType categoryType){
@@ -58,6 +64,8 @@ interface IceMapper {
         }
         return result;
     }
+//    @Mapping(source = "name", target = "", ignore = true)
+//    Category toCategory(CategoryType category);
     Sorbet toCategory(SorbetType category);
     Water toCategory(WaterType category);
     Cream toCategory(CreamType category);
