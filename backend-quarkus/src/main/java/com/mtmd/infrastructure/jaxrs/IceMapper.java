@@ -43,7 +43,6 @@ interface IceMapper {
         }
         return result;
     }
-//    CategoryType toResource(Category category);
     @Mapping(target = "name", constant = "SorbetType")
     SorbetType toResource(Sorbet category);
     @Mapping(target = "name", constant = "WaterType")
@@ -64,8 +63,6 @@ interface IceMapper {
         }
         return result;
     }
-//    @Mapping(source = "name", target = "", ignore = true)
-//    Category toCategory(CategoryType category);
     Sorbet toCategory(SorbetType category);
     Water toCategory(WaterType category);
     Cream toCategory(CreamType category);
