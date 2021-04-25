@@ -57,10 +57,6 @@ public class Ice extends BaseEntity
         this.purchasePrice = purchasePrice;
         this.retailPrice = retailPrice;
         foodIntolerances.ifPresent(s -> this.foodIntolerances = s);
-        // update relation
-//        for (Ingredient ingredient : this.ingredients) {
-//            ingredient.usedFor.add(this);
-//        }
     }
 
     public String getName() {
