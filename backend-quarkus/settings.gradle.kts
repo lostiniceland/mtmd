@@ -10,4 +10,3 @@ pluginManagement {
         id(quarkusPluginId) version quarkusPluginVersion
     }
 }
-rootProject.name = "mtmd-backend"

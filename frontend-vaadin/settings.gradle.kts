@@ -7,4 +7,3 @@ pluginManagement {
     plugins {
     }
 }
-rootProject.name = "mtmd-ui"
