@@ -1,34 +1,105 @@
-= mtmd project
+= Meet The Minds Day
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project consists of a backend using https://quarkus.io/[Quarkus] and a frontend with https://vaadin.com/releases/vaadin-14[Vaadin 14] to implement a given exercise.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+== Running the project
 
-== Backend: Running the application in dev mode
+.Prerequisites
+* JDK 11
+* Docker + Compose
 
-You can run your application in dev mode that enables live coding using:
-
-[source,shell script]
+.Running the project
+[source, shell script]
 ----
-./gradlew quarkusDev
+$ ./build-and-run.sh <1>
+----
+1. Use the `.bat` version when on Windows.
+
+NOTE: Vaadin requires a lot of additional generated files packaged into the Spring-Boot Docker container. This currently doesn't work and hence the `build-and-run` uses a combination of Docker-Compose (for database and backend) and running Spring-Boot locally.
+
+IMPORTANT: After stopping the final process in `build-and-run` make sure to execute `docker-compose -f all-docker-compose.yml down` to stop the running containers.
+
+
+.Accessing the application(s)
+|===
+|Url |Description
+
+|http://localhost:9080/ice-ui
+|User interface
+
+|http://localhost:8080/ice
+|API endpoint
+
+|http://localhost:8080/q/swagger-ui
+|Swagger API documentation
+
+|http://localhost:8080/q/openapi
+|Openapi V3 contract
+|===
+
+== Key Considerations
+
+=== Contract First
+The API was defined with a contract-first approach using Openapi V3. Next to documentation it also helps to implement the frontend because it can generate the client from the same definition.
+
+The contract is defined in the `icy-v1.0.yaml` file in the project root and is referenced by the backend and frontend.
+
+=== Automatic Database Migration
+
+An application should manage its own database schema. When releasing a new version, the application must handle the migration itself.
+This is great for staging because once the release hits production it is guaranteed that the migration scripts have been
+executed multiple times on different databases and are considered working. The opposite of change-requests in a ticket-system which are manually executed by a DBA.
+
+For this purpose the tool https://flywaydb.org/[Flyway] is used. Quarkus already has native support, so only the DB scripts need to be applied.
+
+Flyway add a some tables to keep track of which files have already been applied to a given database and runs the remaining ones.
+
+IMPORTANT: Never change a SQL file which was already executed on a remote machine (which you cannot reset). Flyway compares a file hash with an entry in the db-migration-table and fails if they don't match. Hence, it is also important
+to make sure the files have always the same line-endings (preferably never Windows).
+
+=== Hexagonal Architecture
+
+NOTE: This section currently only applies to the backend to make a point. The frontend is more hacked together :-)
+
+The hexagonal (or onion) architecture keeps the domain in the center, wrapped by a application-layer, and has all external facing
+code in so-called adapters at the outside. It was defined in the wake of Domain-Driven-Design back in 2003.
+
+.Classic n-tier architecture
+----
+UI / Endpoints                                     |
+Application / Domain                               |
+External Systems (aka database, api-clients, etc)  V  <1>
+----
+1. External APIs can leak into the application because they are pulled in transitively. It is easy to use a db-call from the UI bypassing the application-boundary.
+
+.Hexagonal Architecture
+----
+UI / Endpoints / DAOs / All the ugly stuff         |
+Application                                        |  <1>
+Domain                                             V  <2>
+----
+1. Usually access-control, transactional boundaries, orchestration
+2. Pure domain logic
+
+NOTE: When using Java annotations for ORM (JPA, Spring) it is sound to place them on the entities in the domain
+even though they can be considered database-apis. Having a dedicated DB model just creates unnecessary mapping burden and
+performance issues.
+
+In the backend this architecture is applied
+
+=== Living Documentation
+Documentation should not live outside the code repository. By using a simple https://asciidoctor.org/docs/asciidoc-writers-guide[Asciidoc] format we can generate PDF, HTML, or even publish to Confluence. Furthermore, Asciidoc can also include live code, so there is no need to keep the documentation in sync with the code.
+
+.Generate a PDF of this documentation
+[source, shell script]
+----
+$ ./gradlew asciidoctorPdf
 ----
 
-> **_NOTE:_** Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+=== Pinned Build-Tool Version
+Using Maven, Gradle or any other build tool is nice, but still leaves room for inconsistencies when different tool versions are used.
+Gradle (and also by now Maven) support the idea of a wrapper. They come in the form of little shell/bat scripts which read
+a properties file to determine the version of the build-tool to use. Then the wrapper will download this version within
+the project and execute the given task.
 
-== Packaging and running the application
-
-The application can be packaged using:
-
-[source,shell script]
-----
-./gradlew build
-----
-
-.Native image has a considerable size advantage
-[source,shell script]
-----
-docker images
-REPOSITORY                                                           TAG                 IMAGE ID            CREATED              SIZE
-mtmd/quarkus-native-backend                                          latest              56e70ef7153a        About a minute ago   179MB
-mtmd/quarkus-backend                                                 latest              6010f157fae9        About an hour ago    403MB
-----
+This project is current pinned to Gradle 6.8.3. Just to give an example: Gradle 7.0 breaks the openapi-gradle-plugin :-)
