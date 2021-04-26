@@ -13,6 +13,7 @@ import org.mapstruct.ReportingPolicy;
 
 import javax.money.Monetary;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,5 +88,27 @@ interface IceMapper {
 
     default String mapOptionalString(Optional<String> value){
         return value.orElse(null);
+    }
+
+    default Category toCategory(com.mtmd.infrastructure.jaxrs.gen.types.Ice ice){
+        Category category;
+        if (ice instanceof com.mtmd.infrastructure.jaxrs.gen.types.Water){
+            List<String> flavourAdditive = ((com.mtmd.infrastructure.jaxrs.gen.types.Water) ice).getFlavourAdditive();
+            category = new Water(Optional.of(flavourAdditive));
+        }else if(ice instanceof com.mtmd.infrastructure.jaxrs.gen.types.Sorbet){
+            com.mtmd.infrastructure.jaxrs.gen.types.Sorbet sorbet = (com.mtmd.infrastructure.jaxrs.gen.types.Sorbet) ice;
+            category = new Sorbet(sorbet.getFruitContentInPercent(), sorbet.getFruits());
+        }else if (ice instanceof com.mtmd.infrastructure.jaxrs.gen.types.Cream){
+            category = new Cream(((com.mtmd.infrastructure.jaxrs.gen.types.Cream) ice).getCreamInPercent());
+        }else if(ice.getCategory().equals("Water")) {
+            category = new Water(Optional.empty());
+        }else if(ice.getCategory().equals("Sorbet")) {
+            category = new Sorbet(0, Collections.emptyList());
+        }else if(ice.getCategory().equals("Cream")) {
+            category = new Cream(0);
+        }else {
+            throw new IllegalArgumentException("Unsupported Ice-Category");
+        }
+        return category;
     }
 }

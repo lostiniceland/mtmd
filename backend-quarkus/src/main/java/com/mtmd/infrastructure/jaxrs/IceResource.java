@@ -35,17 +35,16 @@ public class IceResource implements V1IceApi {
 
     @Override
     public Response createIce(com.mtmd.infrastructure.jaxrs.gen.types.Ice ice) {
-//        Ice iceEntity = service.addIce(
-//                ice.getName(),
-//                mapper.toCategory(ice.getCategory()),
-//                ice.getIngredients(),
-//                ice.getNutrients(),
-//                mapper.mapStringToMoney(ice.getPurchasePrice()),
-//                mapper.mapStringToMoney(ice.getRetailPrice()),
-//                Optional.ofNullable(ice.getFoodIntolerances()));
-//        URI uri = uriInfo.getBaseUriBuilder().path(IceResource.class).path(String.valueOf(iceEntity.getName())).build();
-//        return Response.created(uri).entity(mapper.toResource(iceEntity)).build();
-        return Response.ok().build();
+        Ice iceEntity = service.addIce(
+                ice.getName(),
+                mapper.toCategory(ice),
+                ice.getIngredients(),
+                Optional.ofNullable(ice.getNutrients()).orElse(0),
+                mapper.mapStringToMoney(ice.getPurchasePrice()),
+                mapper.mapStringToMoney(ice.getRetailPrice()),
+                Optional.ofNullable(ice.getFoodIntolerances()));
+        URI uri = uriInfo.getBaseUriBuilder().path(IceResource.class).path(String.valueOf(iceEntity.getName())).build();
+        return Response.created(uri).entity(mapper.toResource(iceEntity)).build();
     }
 
     @Override

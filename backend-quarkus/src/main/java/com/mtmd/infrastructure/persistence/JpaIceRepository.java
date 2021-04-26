@@ -3,6 +3,10 @@ package com.mtmd.infrastructure.persistence;
 import com.mtmd.application.TechnicalException;
 import com.mtmd.domain.Ice;
 import com.mtmd.domain.IceRepository;
+import com.mtmd.domain.category.Category;
+import com.mtmd.domain.category.Cream;
+import com.mtmd.domain.category.Sorbet;
+import com.mtmd.domain.category.Water;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -18,10 +22,18 @@ public class JpaIceRepository implements IceRepository {
     EntityManager em;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Ice add(Ice ice) {
         try {
             // persist the category before
-            em.persist(ice.getCategory());
+            // FIXME this looks wrong
+            boolean exists = em.createQuery("select c from Category c", Category.class).getResultList().stream()
+                    .anyMatch(entity -> compareCategory(ice.getCategory(), entity));
+            if(exists){
+                ice.setCategory(em.merge(ice.getCategory()));
+            }else{
+                em.persist(ice.getCategory());
+            }
             em.persist(ice);
         } catch (Throwable cause){
             throw new TechnicalException(cause);
@@ -46,5 +58,23 @@ public class JpaIceRepository implements IceRepository {
         } catch (Throwable cause){
             throw new TechnicalException(cause);
         }
+    }
+
+    private boolean compareCategory(Category unmanaged, Category entity){
+        if(unmanaged.getClass().getName().equals(entity.getClass().getName())){
+            // both are of same type, continue
+            boolean result;
+            if(unmanaged instanceof Water){
+                result = ((Water)unmanaged).getName().equals(((Water)entity).getName());
+            }else if (unmanaged instanceof Sorbet){
+                result = ((Sorbet)unmanaged).getName().equals(((Sorbet)entity).getName());
+            }else if(unmanaged instanceof Cream){
+                result = ((Cream)unmanaged).getName().equals(((Cream)entity).getName());
+            }else{
+                throw new IllegalArgumentException("Unmapped Type");
+            }
+            return result;
+        }
+        return false;
     }
 }

@@ -21,6 +21,9 @@ public final class Water extends Category {
     }
 
     public List<String> getFlavourAdditive(){
+        if(flavourAdditive == null){
+            return Collections.emptyList();
+        }
         return Collections.unmodifiableList(flavourAdditive);
     }
 

@@ -112,4 +112,9 @@ public class Ice extends BaseEntity
                 ", foodIntolerances=" + foodIntolerances +
                 '}';
     }
+
+    //FIXME this is completely bogus and needed due to transient properties -> improve mapping
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

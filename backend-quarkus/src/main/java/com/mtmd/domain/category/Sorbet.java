@@ -28,6 +28,9 @@ public final class Sorbet extends Category {
     }
 
     public List<String> getFruits() {
+        if(fruitContentInPercent == null){
+            return Collections.emptyList();
+        }
         return Collections.unmodifiableList(fruits);
     }
 

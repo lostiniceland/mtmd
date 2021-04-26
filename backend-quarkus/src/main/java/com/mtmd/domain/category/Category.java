@@ -22,6 +22,10 @@ public abstract class Category
         return Objects.equals(id, category.id);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
