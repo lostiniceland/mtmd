@@ -1,5 +1,5 @@
 plugins {
-    id("war")
+    id("java")
     id ("org.springframework.boot") version "2.4.5"
     id("com.vaadin") version "0.14.5.1"
     id("org.openapi.generator") version "5.1.0"
@@ -72,7 +72,32 @@ tasks {
     }
 }
 
+
+vaadin {
+//    productionMode = true
+}
+
 jib {
     from.image = "adoptopenjdk:11.0.10_9-jre-hotspot"
     to.image = "mtmd/vaadin-frontend"
+    // vaadin needs a lot of additional resources which need to be copied to the correct location
+    // TODO not yet working
+    extraDirectories {
+        paths{
+            path{
+                setFrom(file("$buildDir/vaadin-generated"))
+                into.plus("/app/resources/")
+            }
+            path{
+                setFrom(file("$projectDir"))
+                includes.set(listOf("package.json", "package-lock.json"))
+                into.plus("/app/resources/META-INF/resources")
+            }
+            path{
+                setFrom(file("frontend"))
+                into.plus("/app/resources/META-INF/resources")
+            }
+        }
+
+    }
 }

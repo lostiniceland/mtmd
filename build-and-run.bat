@@ -5,6 +5,10 @@ cd backend-quarkus
 docker build -f src/main/docker/Dockerfile.jvm -t mtmd/quarkus-backend .
 cd ..
 
-./gradlew :frontend-vaadin:jibDockerBuild
+# Container not yet working due to Vaadin complexities
+#./gradlew :frontend-vaadin:jibDockerBuild
 
-docker-compose -f all-docker-compose.yml up
+docker-compose -f all-docker-compose.yml up --detach
+
+./gradlew :frontend-vaadin:bootRun
+

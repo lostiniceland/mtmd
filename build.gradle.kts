@@ -1,6 +1,5 @@
 plugins{
     id("base")
-    id("war")
 }
 allprojects {
     repositories {
