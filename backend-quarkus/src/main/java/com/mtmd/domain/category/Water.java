@@ -5,7 +5,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "category_water")
-@DiscriminatorValue("S")
+@DiscriminatorValue("W")
 public final class Water extends Category {
 
     @ElementCollection
