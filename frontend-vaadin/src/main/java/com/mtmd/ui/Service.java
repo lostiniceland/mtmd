@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @org.springframework.stereotype.Service
 public class Service {
@@ -29,5 +30,16 @@ public class Service {
             result = Collections.emptyList();
         }
         return result;
+    }
+
+    public Optional<Ice> createIce(Ice ice) {
+        Ice created = null;
+        try {
+            apis.getIceApi().createIce(ice);
+            created = apis.getIceApi().getIceByName(ice.getName());
+        } catch (Exception e) {
+            logger.error("Could not create new ice!", e);
+        }
+        return Optional.ofNullable(created);
     }
 }
