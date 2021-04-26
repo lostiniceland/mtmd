@@ -3,6 +3,9 @@ openapi: 3.0.3
 info:
   title: Generated API
   version: "1.0"
+servers:
+  - url: http://localhost:8080
+    description: Default development server
 tags:
   - name: V1Ice
     description: Your favorite IceCream API
