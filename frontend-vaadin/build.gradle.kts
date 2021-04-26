@@ -89,13 +89,8 @@ jib {
                 into.plus("/app/resources/")
             }
             path{
-                setFrom(file("$projectDir"))
-                includes.set(listOf("package.json", "package-lock.json"))
-                into.plus("/app/resources/META-INF/resources")
-            }
-            path{
-                setFrom(file("frontend"))
-                into.plus("/app/resources/META-INF/resources")
+                setFrom(file("$projectDir/frontend"))
+                into.plus("/app/resources/")
             }
         }
 

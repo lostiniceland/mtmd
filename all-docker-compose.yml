@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.6'
 services:
   postgres:
     image: postgres
@@ -7,8 +7,17 @@ services:
     environment:
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "changeit"
+    healthcheck:
+      test: "pg_isready"
+      interval: "120s"
+      timeout: "3s"
+      start_period: "1s"
+      retries: 3
+
 
   backend:
+    depends_on:
+      - postgres
     image: mtmd/quarkus-backend
     restart: always  # because Postgres could take longer to boot
     ports:
@@ -17,10 +26,21 @@ services:
       DB_HOST: postgres
     links:
       - postgres
+    healthcheck:
+      test: "curl http://localhost:8080/q/health/ready"
+      interval: "60s"
+      timeout: "3s"
+      start_period: "5s"
+      retries: 3
 
-#  frontend:
-#    image: mtmd/vaadin-frontend
-#    ports:
-#      - 9080:9080
-#    links:
-#      - backend
+  frontend:
+    depends_on:
+      - backend
+    image: mtmd/vaadin-frontend
+    ports:
+      - 9080:9080
+    links:
+      - backend
+    environment:
+      ICE_API_HOST: backend
+      ICE_API_PORT: 8080

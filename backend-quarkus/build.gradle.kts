@@ -25,6 +25,7 @@ dependencies {
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-resteasy-jsonb")
     implementation("io.quarkus:quarkus-flyway")
+    implementation("io.quarkus:quarkus-smallrye-health")
     implementation("org.javamoney:moneta:1.4.2")
     implementation( "org.mapstruct:mapstruct:$mapstructVersion" )
     implementation("io.swagger:swagger-annotations:1.6.2")

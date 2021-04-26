@@ -15,11 +15,6 @@ $ ./build-and-run.sh <1>
 ----
 1. Use the `.bat` version when on Windows.
 
-NOTE: Vaadin requires a lot of additional generated files packaged into the Spring-Boot Docker container. This currently doesn't work and hence the `build-and-run` uses a combination of Docker-Compose (for database and backend) and running Spring-Boot locally.
-
-IMPORTANT: After stopping the final process in `build-and-run` make sure to execute `docker-compose -f all-docker-compose.yml down` to stop the running containers.
-
-
 .Accessing the application(s)
 |===
 |Url |Description
@@ -35,6 +30,12 @@ IMPORTANT: After stopping the final process in `build-and-run` make sure to exec
 
 |http://localhost:8080/q/openapi
 |Openapi V3 contract
+
+|http://localhost:8080/q/health/ready
+|Microprofile Readiness-Check
+
+|http://localhost:8080/q/health/live
+|Microprofile Liveness-Check
 |===
 
 == Key Considerations
