@@ -82,8 +82,10 @@ components:
           type: integer
         purchasePrice:
           type: string
+          format: 10 EUR
         retailPrice:
           type: string
+          format: 10 EUR
       discriminator:
         propertyName: category
     Water:
