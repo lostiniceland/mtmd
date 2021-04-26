@@ -43,3 +43,6 @@
 
 # Local environment
 **/.env
+
+# Generated Readme
+README.pdf
