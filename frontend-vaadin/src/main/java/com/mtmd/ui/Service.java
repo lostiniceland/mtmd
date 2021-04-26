@@ -1,7 +1,7 @@
 package com.mtmd.ui;
 
 import com.mtmd.ui.infrastructure.client.ApiException;
-import com.mtmd.ui.infrastructure.client.gen.types.IceType;
+import com.mtmd.ui.infrastructure.client.gen.types.Ice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ public class Service {
         this.apis = apis;
     }
 
-    public List<IceType> loadIce() {
-        List<IceType> result;
+    public List<Ice> loadIce() {
+        List<Ice> result;
         try {
             result = apis.getIceApi().getAllIceCream();
         } catch (Exception e) {

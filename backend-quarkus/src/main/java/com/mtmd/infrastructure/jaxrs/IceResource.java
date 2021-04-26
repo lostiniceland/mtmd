@@ -34,22 +34,23 @@ public class IceResource implements V1IceApi {
 
 
     @Override
-    public Response createIce(IceType ice) {
-        Ice iceEntity = service.addIce(
-                ice.getName(),
-                mapper.toCategory(ice.getCategory()),
-                ice.getIngredients(),
-                ice.getNutrients(),
-                mapper.mapStringToMoney(ice.getPurchasePrice()),
-                mapper.mapStringToMoney(ice.getRetailPrice()),
-                Optional.ofNullable(ice.getFoodIntolerances()));
-        URI uri = uriInfo.getBaseUriBuilder().path(IceResource.class).path(String.valueOf(iceEntity.getName())).build();
-        return Response.created(uri).entity(mapper.toResource(iceEntity)).build();
+    public Response createIce(com.mtmd.infrastructure.jaxrs.gen.types.Ice ice) {
+//        Ice iceEntity = service.addIce(
+//                ice.getName(),
+//                mapper.toCategory(ice.getCategory()),
+//                ice.getIngredients(),
+//                ice.getNutrients(),
+//                mapper.mapStringToMoney(ice.getPurchasePrice()),
+//                mapper.mapStringToMoney(ice.getRetailPrice()),
+//                Optional.ofNullable(ice.getFoodIntolerances()));
+//        URI uri = uriInfo.getBaseUriBuilder().path(IceResource.class).path(String.valueOf(iceEntity.getName())).build();
+//        return Response.created(uri).entity(mapper.toResource(iceEntity)).build();
+        return Response.ok().build();
     }
 
     @Override
     public Response getAllIceCream() {
-        List<IceType> result = mapper.toResources(service.loadAllIceCreams());
+        List<com.mtmd.infrastructure.jaxrs.gen.types.Ice> result = mapper.toResources(service.loadAllIceCreams());
         return Response.ok().entity(result).build();
     }
 

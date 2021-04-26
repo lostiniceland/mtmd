@@ -21,7 +21,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/IceType'
+                  $ref: '#/components/schemas/Ice'
 
         "500":
           description: Technical Error. Not your fault.
@@ -34,7 +34,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IceType'
+              $ref: '#/components/schemas/Ice'
       responses:
         "201":
           description: Created
@@ -58,54 +58,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IceType'
+                $ref: '#/components/schemas/Ice'
         "500":
           description: Technical Error. Not your fault.
 components:
   schemas:
-    CategoryType:
-      type: object
-      properties:
-        name:
-          type: string
-        subtype:
-          type: string
-      discriminator:
-        propertyName: subtype
-    SorbetType:
-      allOf:
-        - $ref: '#/components/schemas/CategoryType'
-        - type: object
-          properties:
-            fruitContentInPercent:
-              type: integer
-            fruits:
-              type: array
-              items:
-                type: string
-    CreamType:
-      allOf:
-        - $ref: '#/components/schemas/CategoryType'
-        - type: object
-          properties:
-            creamInPercent:
-              type: integer
-    WaterType:
-      allOf:
-        - $ref: '#/components/schemas/CategoryType'
-        - type: object
-          required:
-            - objectType
-          properties:
-            flavourAdditive:
-              type: array
-              items:
-                type: string
-    IceType:
+    Ice:
       type: object
       properties:
         category:
-          $ref: '#/components/schemas/CategoryType'
+          type: string
         foodIntolerances:
           type: string
         ingredients:
@@ -122,3 +84,34 @@ components:
           type: string
         retailPrice:
           type: string
+      discriminator:
+        propertyName: category
+    Water:
+      allOf:
+        - $ref: '#/components/schemas/Ice'
+        - type: object
+          required:
+            - objectType
+          properties:
+            flavourAdditive:
+              type: array
+              items:
+                type: string
+    Cream:
+      allOf:
+        - $ref: '#/components/schemas/Ice'
+        - type: object
+          properties:
+            creamInPercent:
+              type: integer
+    Sorbet:
+      allOf:
+        - $ref: '#/components/schemas/Ice'
+        - type: object
+          properties:
+            fruitContentInPercent:
+              type: integer
+            fruits:
+              type: array
+              items:
+                type: string

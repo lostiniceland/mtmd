@@ -2,7 +2,7 @@ package com.mtmd.ui;
 
 import com.mtmd.ui.infrastructure.client.ApiException;
 import com.mtmd.ui.infrastructure.client.gen.V1IceApi;
-import com.mtmd.ui.infrastructure.client.gen.types.IceType;
+import com.mtmd.ui.infrastructure.client.gen.types.Ice;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -93,10 +93,10 @@ public class MainView extends VerticalLayout {
 
         H2 headerAll = new H2("All types of ice-cream");
 
-        Grid<IceType> allIceGrid = new Grid<>();
+        Grid<Ice> allIceGrid = new Grid<>();
         allIceGrid.setItems(service.loadIce());
-        allIceGrid.addColumn(IceType::getName).setHeader("Name");
-        allIceGrid.addColumn(i -> i.getCategory().getName()).setHeader("Category");
+        allIceGrid.addColumn(Ice::getName).setHeader("Name");
+        allIceGrid.addColumn(Ice::getCategory).setHeader("Category");
 
 
         add(headerNew, name, category, foodintolerances, nutrition, purchasePrice, retailPrice, button);
