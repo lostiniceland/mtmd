@@ -97,8 +97,6 @@ NOTE: When using Java annotations for ORM (JPA, Spring) it is sound to place the
 even though they can be considered database-apis. Having a dedicated DB model just creates unnecessary mapping burden and
 performance issues.
 
-In the backend this architecture is applied
-
 === Living Documentation
 Documentation should not live outside the code repository. By using a simple https://asciidoctor.org/docs/asciidoc-writers-guide[Asciidoc] format we can generate PDF, HTML, or even publish to Confluence. Furthermore, Asciidoc can also include live code, so there is no need to keep the documentation in sync with the code.
 
@@ -115,3 +113,19 @@ a properties file to determine the version of the build-tool to use. Then the wr
 the project and execute the given task.
 
 This project is current pinned to Gradle 6.8.3. Just to give an example: Gradle 7.0 breaks the openapi-gradle-plugin :-)
+
+== Compiling the Code
+
+Use the aforementioned Gradle-Wrapper to compile the project.
+
+.Build the backend
+[source, shell script]
+----
+$ ./gradlew :backend-quarkus:build
+----
+
+.Build the frontend
+[source, shell script]
+----
+$ ./gradlew :backend-vaadin:build
+----
