@@ -7,6 +7,7 @@ import com.mtmd.ui.infrastructure.client.gen.types.Ice;
 import com.mtmd.ui.infrastructure.client.gen.types.Sorbet;
 import com.mtmd.ui.infrastructure.client.gen.types.Water;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.notification.Notification;
@@ -55,8 +57,9 @@ public class MainView extends VerticalLayout {
 
     TextField name = new TextField("Name");
     ComboBox<String> category = new ComboBox<>("Category");
+    Label ingredientsExistingLabel = new Label("Ingredients");
     MultiSelectListBox<String> ingredientsExisting = new MultiSelectListBox<>();
-    TextField ingredients = new TextField("Ingredients");
+    TextField ingredients = new TextField("Additional Ingredients");
     TextArea foodintolerances = new TextArea("Food-Intolerance");
     TextField nutrition = new TextField("Nutrition");
     TextField purchasePrice = new TextField("Purchase Price");
@@ -64,7 +67,6 @@ public class MainView extends VerticalLayout {
     Grid<Ice> allIceGrid = new Grid<>();
 
     List<Ice> items = new ArrayList<>(10);
-
     /**
      * Construct a new Vaadin view.
      * <p>
@@ -74,7 +76,11 @@ public class MainView extends VerticalLayout {
     public MainView(@Autowired Service service) {
         this.service = service;
 
-        items.addAll(service.loadIce());
+        try {
+            items.addAll(service.loadIce());
+        }catch(BackendException e) {
+            Notification.show(e.getMessage());
+        }
 
         H2 headerNew = new H2("Add new ice-cream");
 
@@ -85,7 +91,8 @@ public class MainView extends VerticalLayout {
         category.setHelperText("Please choose a category");
         category.setRequired(true);
 
-        ingredients.setHelperText("Add new Ingredients");
+        ingredients.setHelperText("Add Ingredients not yet in List");
+        ingredientsExistingLabel.add(ingredientsExisting, ingredients);
 
         foodintolerances.setHelperText("Please fill in..");
 
@@ -120,13 +127,15 @@ public class MainView extends VerticalLayout {
 
         updateIngredients();
 
-        add(headerNew, name, category, ingredientsExisting, ingredients, foodintolerances, nutrition, purchasePrice, retailPrice, button);
+        add(headerNew, name, category, ingredientsExistingLabel, foodintolerances, nutrition, purchasePrice, retailPrice, button);
         add(headerAll, allIceGrid);
     }
 
     private void updateIngredients(){
         // collect all ingredients
-        ingredientsExisting.setItems(items.stream().flatMap(i -> i.getIngredients().stream()).collect(Collectors.toSet()));
+        ingredientsExisting.setItems(items.stream()
+                .flatMap(i -> Optional.ofNullable(i.getIngredients()).orElse(Collections.emptySet()).stream())
+                .collect(Collectors.toSet()));
     }
 
 
@@ -146,10 +155,15 @@ public class MainView extends VerticalLayout {
             default:
                 throw new IllegalArgumentException("Unsupported Category");
         }
-        Optional<Ice> created = service.createIce(ice);
-        created.ifPresent(newIce -> items.add(newIce));
-        allIceGrid.getDataCommunicator().reset();
-        Notification.show("Created");
+        try{
+            Optional<Ice> created = service.createIce(ice);
+            created.ifPresent(newIce -> items.add(newIce));
+            allIceGrid.getDataCommunicator().reset();
+            updateIngredients();
+            Notification.show("Created");
+        }catch(BackendException e) {
+            Notification.show(e.getMessage());
+        }
     }
 
     private Water createWaterIce(){
@@ -174,7 +188,7 @@ public class MainView extends VerticalLayout {
     private <T extends Ice> T createIce(T ice){
         ice.setName(name.getValue());
         ice.setCategory(category.getValue());
-        ice.setNutrients(Integer.valueOf(nutrition.getValue()));
+        ice.setNutrients(Optional.ofNullable(nutrition.getValue()).map(Integer::valueOf).orElse(0));
         if(ice.getIngredients() == null){
             ice.setIngredients(new HashSet<>(10));
         }
@@ -182,9 +196,8 @@ public class MainView extends VerticalLayout {
         if(ingredients.getValue() != null && !ingredients.getValue().trim().isBlank()){
             ice.getIngredients().add(ingredients.getValue());
         }
-        ice.setPurchasePrice(String.format("%s EUR", purchasePrice.getValue()));
-        ice.setRetailPrice(String.format("%s EUR", retailPrice.getValue()));
+        ice.setPurchasePrice(String.format("%s EUR", Optional.ofNullable(purchasePrice.getValue()).orElse("0")));
+        ice.setRetailPrice(String.format("%s EUR", Optional.ofNullable(retailPrice.getValue()).orElse("0")));
         return ice;
     }
-
 }

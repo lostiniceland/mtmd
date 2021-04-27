@@ -21,24 +21,25 @@ public class Service {
         this.apis = apis;
     }
 
-    public List<Ice> loadIce() {
+    public List<Ice> loadIce() throws BackendException {
         List<Ice> result;
         try {
             result = apis.getIceApi().getAllIceCream();
         } catch (Exception e) {
             logger.error("Could not load data!", e);
-            result = Collections.emptyList();
+            throw new BackendException(e.getMessage());
         }
         return result;
     }
 
-    public Optional<Ice> createIce(Ice ice) {
-        Ice created = null;
+    public Optional<Ice> createIce(Ice ice) throws BackendException {
+        Ice created;
         try {
             apis.getIceApi().createIce(ice);
             created = apis.getIceApi().getIceByName(ice.getName());
         } catch (Exception e) {
             logger.error("Could not create new ice!", e);
+            throw new BackendException(e.getMessage());
         }
         return Optional.ofNullable(created);
     }
