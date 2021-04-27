@@ -58,15 +58,17 @@ tasks {
         options.compilerArgs.add("-parameters")
     }
     withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
-//        generatorName.set("jaxrs-cxf-client")
         generatorName.set("java")
         inputSpec.set("$rootDir/../icy-v1.0.yaml")
         apiPackage.set("com.mtmd.ui.infrastructure.client.gen")
         modelPackage.set("com.mtmd.ui.infrastructure.client.gen.types")
         configOptions.put("dateLibrary", "java8")
     }
+    withType<com.google.cloud.tools.jib.gradle.JibTask> {
+        // make sure vaadinBuildFrontend is called before (otherwise it will not work)
+        dependsOn("vaadinBuildFrontend")
+    }
 }
-
 
 vaadin {
     // must be falso in order to work in Docker for now
@@ -74,21 +76,5 @@ vaadin {
 }
 
 jib {
-    from.image = "adoptopenjdk:11.0.10_9-jre-hotspot"
     to.image = "mtmd/vaadin-frontend"
-    // vaadin needs a lot of additional resources which need to be copied to the correct location
-    // TODO not yet working
-    extraDirectories {
-        paths{
-//            path{
-//                setFrom(file("$buildDir/vaadin-generated"))
-//                into.plus("/app/resources/")
-//            }
-//            path{
-//                setFrom(file("$buildDir/../frontend"))
-//                into.plus("/app/resources")
-//            }
-        }
-
-    }
 }
