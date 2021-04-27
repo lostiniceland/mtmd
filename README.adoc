@@ -1,5 +1,13 @@
 = Meet The Minds Day
 
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
 This project consists of a backend using https://quarkus.io/[Quarkus] and a frontend with https://vaadin.com/releases/vaadin-14[Vaadin 14] to implement a given exercise.
 
 == Running the project
