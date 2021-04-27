@@ -46,6 +46,22 @@ $ ./build-and-run.sh <1>
 |Microprofile Live-Check
 |===
 
+== Compiling the Code
+
+Compilation is done via a Gradle wrapper script which will download the version needed for this project.
+
+.Build the backend
+[source, shell script]
+----
+$ ./gradlew :backend-quarkus:build
+----
+
+.Build the frontend
+[source, shell script]
+----
+$ ./gradlew :backend-vaadin:build
+----
+
 == Key Considerations
 
 === Contract First
@@ -113,19 +129,3 @@ a properties file to determine the version of the build-tool to use. Then the wr
 the project and execute the given task.
 
 This project is current pinned to Gradle 6.8.3. Just to give an example: Gradle 7.0 breaks the openapi-gradle-plugin :-)
-
-== Compiling the Code
-
-Use the aforementioned Gradle-Wrapper to compile the project.
-
-.Build the backend
-[source, shell script]
-----
-$ ./gradlew :backend-quarkus:build
-----
-
-.Build the frontend
-[source, shell script]
-----
-$ ./gradlew :backend-vaadin:build
-----
