@@ -13,11 +13,6 @@ repositories {
     mavenCentral()
 }
 
-// example of how to configure the Gradle Vaadin Plugin
-//vaadin {
-//    pnpmEnable = false
-//}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
@@ -74,7 +69,8 @@ tasks {
 
 
 vaadin {
-//    productionMode = true
+    // must be falso in order to work in Docker for now
+    productionMode = false
 }
 
 jib {
@@ -84,14 +80,14 @@ jib {
     // TODO not yet working
     extraDirectories {
         paths{
-            path{
-                setFrom(file("$buildDir/vaadin-generated"))
-                into.plus("/app/resources/")
-            }
-            path{
-                setFrom(file("$projectDir/frontend"))
-                into.plus("/app/resources/")
-            }
+//            path{
+//                setFrom(file("$buildDir/vaadin-generated"))
+//                into.plus("/app/resources/")
+//            }
+//            path{
+//                setFrom(file("$buildDir/../frontend"))
+//                into.plus("/app/resources")
+//            }
         }
 
     }
