@@ -55,11 +55,7 @@ public class IceResource implements V1IceApi {
 
     @Override
     public Response getIceByName(String name) {
-        try {
-            return Response.ok().entity(mapper.toResource(service.loadIce(name))).build();
-        }catch(IceNotFoundException e){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        return Response.ok().entity(mapper.toResource(service.loadIce(name))).build();
     }
 
 

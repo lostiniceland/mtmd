@@ -1,7 +1,7 @@
 package com.mtmd.application;
 
-public class IceNotFoundException extends RuntimeException {
-    public IceNotFoundException(String message){
+public class IceNotFoundException extends DomainException {
+    IceNotFoundException(String message){
         super(message);
     }
 }

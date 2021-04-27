@@ -1,7 +1,7 @@
 package com.mtmd.application;
 
-public class IceAlreadyInStockException extends RuntimeException {
-    public IceAlreadyInStockException(String message){
+public class IceAlreadyInStockException extends DomainException {
+    IceAlreadyInStockException(String message){
         super(message);
     }
 }
