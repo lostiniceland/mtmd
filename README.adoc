@@ -32,10 +32,10 @@ $ ./build-and-run.sh <1>
 |Openapi V3 contract
 
 |http://localhost:8080/q/health/ready
-|Microprofile Readiness-Check
+|Microprofile Readiness-Check (waits for instance until caches are built up)
 
 |http://localhost:8080/q/health/live
-|Microprofile Liveness-Check
+|Microprofile Live-Check
 |===
 
 == Key Considerations
@@ -55,15 +55,16 @@ For this purpose the tool https://flywaydb.org/[Flyway] is used. Quarkus already
 
 Flyway add a some tables to keep track of which files have already been applied to a given database and runs the remaining ones.
 
-IMPORTANT: Never change a SQL file which was already executed on a remote machine (which you cannot reset). Flyway compares a file hash with an entry in the db-migration-table and fails if they don't match. Hence, it is also important
+IMPORTANT: Never change SQL files which have already been executed on a remote machine (which you cannot reset). Flyway compares a file hash with an entry in the db-migration-table and fails if they don't match. Hence, it is also important
 to make sure the files have always the same line-endings (preferably never Windows).
 
 === Hexagonal Architecture
 
 NOTE: This section currently only applies to the backend to make a point. The frontend is more hacked together :-)
 
-The hexagonal (or onion) architecture keeps the domain in the center, wrapped by a application-layer, and has all external facing
-code in so-called adapters at the outside. It was defined in the wake of Domain-Driven-Design back in 2003.
+The hexagonal (or onion) architecture, sometimes also called ports-and-adapters, keeps the domain in the center,
+wrapped by an application-layer, and has all external facing code in so-called adapters at the outside.
+It was defined in the wake of Domain-Driven-Design back in 2003.
 
 .Classic n-tier architecture
 ----
@@ -80,7 +81,9 @@ Application                                        |  <1>
 Domain                                             V  <2>
 ----
 1. Usually access-control, transactional boundaries, orchestration
-2. Pure domain logic
+2. Pure domain logic. Includes interfaces which the adapters have to implement.
+
+Access to the "adapters" on the outside is realized via dependency-injection.
 
 NOTE: When using Java annotations for ORM (JPA, Spring) it is sound to place them on the entities in the domain
 even though they can be considered database-apis. Having a dedicated DB model just creates unnecessary mapping burden and
