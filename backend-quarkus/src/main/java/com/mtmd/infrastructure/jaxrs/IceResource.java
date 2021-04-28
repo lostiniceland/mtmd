@@ -4,6 +4,7 @@ import com.mtmd.application.IceService;
 import com.mtmd.domain.Ice;
 import com.mtmd.infrastructure.jaxrs.gen.V1IceApi;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -12,6 +13,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@RequestScoped
 public class IceResource implements V1IceApi {
 
     @Inject

@@ -4,12 +4,17 @@ import com.mtmd.application.DomainException;
 import com.mtmd.application.IceNotFoundException;
 import com.mtmd.application.TechnicalException;
 import com.mtmd.application.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 @Provider
 public class ExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Throwable> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionMapper.class);
+
     @Override
     public Response toResponse(Throwable exception) {
         Response response;
@@ -26,6 +31,8 @@ public class ExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Throwabl
                         .entity(formatJsonResponseMessage(exception.getMessage())).build();
             }
         }else{
+            // this error might have slipped the logging in the ApplicationService
+            logger.error("Uncaught Exception", exception);
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return response;

@@ -1,5 +1,6 @@
 package com.mtmd.infrastructure.persistence;
 
+import com.mtmd.application.IceAlreadyInStockException;
 import com.mtmd.application.TechnicalException;
 import com.mtmd.domain.Ice;
 import com.mtmd.domain.IceRepository;
@@ -9,6 +10,7 @@ import com.mtmd.domain.category.Sorbet;
 import com.mtmd.domain.category.Water;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
@@ -35,7 +37,9 @@ public class JpaIceRepository implements IceRepository {
                 em.persist(ice.getCategory());
             }
             em.persist(ice);
-        } catch (Throwable cause){
+        } catch(EntityExistsException e){
+            throw new IceAlreadyInStockException(String.format("Ice with name '%s' is already in stock!", ice.getName()));
+        }catch (Throwable cause){
             throw new TechnicalException(cause);
         }
         return ice;

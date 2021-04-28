@@ -1,5 +1,6 @@
 package com.mtmd.infrastructure.jaxrs;
 
+import com.mtmd.application.ValidationException;
 import com.mtmd.domain.Ice;
 import com.mtmd.domain.Ingredient;
 import com.mtmd.domain.category.Category;
@@ -16,10 +17,13 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "cdi", unmappedTargetPolicy = ReportingPolicy.ERROR)
 interface IceMapper {
+
+    static final Pattern moneyPattern = Pattern.compile("\\d+(\\.\\d{1,2})? EUR");
 
     default List<com.mtmd.infrastructure.jaxrs.gen.types.Ice> toResources(List<Ice> list){
         return list.stream().map(ice -> {
@@ -81,6 +85,9 @@ interface IceMapper {
     default Money mapStringToMoney(String value){
         if(value == null){
             return null;
+        }
+        if(!moneyPattern.matcher(value).matches()){
+            throw new ValidationException("Money must conform to '1.00 EUR' or '1 EUR'");
         }
         String[] split = value.split(" ");
         return Money.of(new BigDecimal(split[0]), Monetary.getCurrency(split[1]));

@@ -1,10 +1,10 @@
 package com.mtmd.application;
 
 public class DomainException extends RuntimeException {
-    DomainException(String message){
+    public DomainException(String message){
         super(message);
     }
-    DomainException(String message, Throwable cause){
+    public DomainException(String message, Throwable cause){
         super(message, cause);
     }
 }
