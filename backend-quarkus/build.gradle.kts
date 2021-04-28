@@ -35,9 +35,6 @@ dependencies {
     testImplementation("org.spockframework:spock-core:2.0-M4-groovy-3.0") // Quarkus ships Groovy 3, so we have to jump
 }
 
-group = "com.example"
-version = "1.0-SNAPSHOT"
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
