@@ -24,7 +24,6 @@ public class IceResource implements V1IceApi {
         return Response.ok().entity(mapper.toResources(service.loadAllIceCreams())).build();
     }
 
-
     @Override
     public Response createIce(com.mtmd.infrastructure.jaxrs.gen.types.Ice ice) {
         Ice iceEntity = service.addIce(
@@ -35,7 +34,7 @@ public class IceResource implements V1IceApi {
                 mapper.mapStringToMoney(ice.getPurchasePrice()),
                 mapper.mapStringToMoney(ice.getRetailPrice()),
                 Optional.ofNullable(ice.getFoodIntolerances()));
-        URI uri = uriInfo.getBaseUriBuilder().path(IceResource.class).path(String.valueOf(iceEntity.getName())).build();
+        URI uri = uriInfo.getBaseUriBuilder().path(V1IceApi.class).path(String.valueOf(iceEntity.getName())).build();
         return Response.created(uri).entity(mapper.toResource(iceEntity)).build();
     }
 
