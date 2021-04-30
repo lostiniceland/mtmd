@@ -3,7 +3,9 @@ package com.mtmd.domain;
 import io.smallrye.common.constraint.NotNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Ingredient extends BaseEntity {
@@ -11,6 +13,9 @@ public class Ingredient extends BaseEntity {
     @Id
     @NotNull
     private String name;
+
+    @ManyToMany(mappedBy = "ingredients")
+    private Set<Ice> usingIces = new HashSet<>();
 
     // Needed only for JPA
     protected Ingredient() {}
@@ -20,9 +25,16 @@ public class Ingredient extends BaseEntity {
         this.name = name;
     }
 
+    /** Only call via Ice#addIgredient **/
+    void addIce(Ice ice){
+        this.usingIces.add(ice);
+    }
+
     public String getName() {
         return name;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

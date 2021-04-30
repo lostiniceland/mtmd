@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class BaseEntity {
 
+    @Transient
+    private boolean isNew = true;
+
     @Version
     private long version;
     @Column(columnDefinition = "TIMESTAMP")
@@ -26,12 +29,22 @@ public class BaseEntity {
         return created.toLocalDateTime();
     }
 
+    public boolean isNew() {
+        return isNew;
+    }
+
     @PrePersist
     @PreUpdate
     void onCreateOrUpdate() {
+        this.isNew = false;
         if (created == null) {
             this.created = Timestamp.valueOf(LocalDateTime.now());
         }
         this.updated = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    @PostLoad
+    void markNotNew(){
+        this.isNew = false;
     }
 }

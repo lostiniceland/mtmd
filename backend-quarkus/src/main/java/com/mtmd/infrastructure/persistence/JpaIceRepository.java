@@ -4,6 +4,7 @@ import com.mtmd.application.IceAlreadyInStockException;
 import com.mtmd.application.TechnicalException;
 import com.mtmd.domain.Ice;
 import com.mtmd.domain.IceRepository;
+import com.mtmd.domain.Ingredient;
 import com.mtmd.domain.category.Category;
 import com.mtmd.domain.category.Cream;
 import com.mtmd.domain.category.Sorbet;
@@ -59,6 +60,15 @@ public class JpaIceRepository implements IceRepository {
     public List<Ice> findAll() {
         try {
             return Collections.unmodifiableList(em.createQuery("select i from Ice i").getResultList());
+        } catch (Throwable cause){
+            throw new TechnicalException(cause);
+        }
+    }
+
+    @Override
+    public Optional<Ingredient> findIngredientById(String name) {
+        try {
+            return Optional.ofNullable(em.find(Ingredient.class, name));
         } catch (Throwable cause){
             throw new TechnicalException(cause);
         }

@@ -6,6 +6,7 @@ import org.javamoney.moneta.Money;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -23,12 +24,12 @@ public class Ice extends BaseEntity
     @JoinColumn(name="category_id")
     Category category;
     @NotNull
-    @OneToMany(cascade = {PERSIST, MERGE})
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(
             name="ice_ingredients",
             joinColumns = {@JoinColumn(name="ice_id")},
             inverseJoinColumns = {@JoinColumn(name="ingredient_id")})
-    Set<Ingredient> ingredients;
+    Set<Ingredient> ingredients = new HashSet<>(10);
     int nutrients;
     @NotNull
     @Convert(converter = JpaMoneyConverter.class)
@@ -52,11 +53,18 @@ public class Ice extends BaseEntity
         Objects.requireNonNull(retailPrice, "RetailPrice must be defined!");
         this.name = name.replace(" ", "-");
         this.category = category;
-        this.ingredients = ingredients;
+        for (Ingredient ingredient : ingredients) {
+            this.addIngredient(ingredient);
+        }
         this.nutrients = nutrients;
         this.purchasePrice = purchasePrice;
         this.retailPrice = retailPrice;
         foodIntolerances.ifPresent(s -> this.foodIntolerances = s);
+    }
+
+    public void addIngredient(Ingredient ingredient){
+        this.ingredients.add(ingredient);
+        ingredient.addIce(this);
     }
 
     public String getName() {
@@ -86,6 +94,7 @@ public class Ice extends BaseEntity
     public Optional<String> getFoodIntolerances() {
         return Optional.ofNullable(foodIntolerances);
     }
+
 
     @Override
     public boolean equals(Object o) {

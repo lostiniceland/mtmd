@@ -9,4 +9,6 @@ public interface IceRepository {
     Optional<Ice> findById(String vanilla);
 
     List<Ice> findAll();
+
+    Optional<Ingredient> findIngredientById(String name);
 }

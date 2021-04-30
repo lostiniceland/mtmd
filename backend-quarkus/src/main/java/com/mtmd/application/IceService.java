@@ -3,7 +3,6 @@ package com.mtmd.application;
 import com.mtmd.domain.Ice;
 import com.mtmd.domain.IceRepository;
 import com.mtmd.domain.Ingredient;
-import com.mtmd.domain.IngredientRepository;
 import com.mtmd.domain.category.Category;
 import org.javamoney.moneta.Money;
 
@@ -21,8 +20,6 @@ public class IceService {
 
     @Inject
     IceRepository iceRepository;
-    @Inject
-    IngredientRepository ingredientRepository;
 
     public List<Ice> loadAllIceCreams(){
         return iceRepository.findAll();
@@ -39,10 +36,12 @@ public class IceService {
         if(iceRepository.findById(name).isPresent()){
             throw new IceAlreadyInStockException(String.format("Ice with name '%s' is already in stock!", name));
         }
-        Set<Ingredient> ingredientEntities = ingredients.stream().map(s -> ingredientRepository.findById(s)
-                .orElseGet(() -> ingredientRepository.add(new Ingredient(s)))) // use lambda for lazy evaluation
+        Set<Ingredient> ingredientEntities = ingredients.stream()
+                .map(ingredientName -> iceRepository.findIngredientById(ingredientName)
+                        .orElseGet(() -> new Ingredient(ingredientName))) // use lambda for lazy evaluation
                 .collect(Collectors.toSet());
-        return iceRepository.add(new Ice(name, category, ingredientEntities, nutrients, purchasePrice, retailPrice, foodIntolerances));
+        Ice ice = new Ice(name, category, ingredientEntities, nutrients, purchasePrice, retailPrice, foodIntolerances);
+        return iceRepository.add(ice);
     }
 
 }
