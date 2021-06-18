@@ -2,7 +2,7 @@ plugins {
     java
     id("io.quarkus")
     groovy
-    id("org.openapi.generator") version "5.1.0"
+    id("org.openapi.generator") version "5.1.1"
 }
 
 repositories {
@@ -17,7 +17,7 @@ val quarkusPlatformVersion: String by project
 val mapstructVersion = "1.4.2.Final"
 
 dependencies {
-    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
+    implementation(platform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy")
     implementation("io.quarkus:quarkus-smallrye-openapi")
@@ -32,35 +32,38 @@ dependencies {
 
     annotationProcessor( "org.mapstruct:mapstruct-processor:$mapstructVersion" )
     testImplementation("io.rest-assured:rest-assured")
-    testImplementation("org.spockframework:spock-core:2.0-M4-groovy-3.0") // Quarkus ships Groovy 3, so we have to jump
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-// customizing source-sets to add openapi generated files
-sourceSets {
-    main {
-        java {
-
-            srcDir("$buildDir/generate-resources/main/src/gen/java/")
+    testImplementation("org.spockframework:spock-core:2.0-groovy-3.0")
+    testImplementation("org.codehaus.groovy:groovy"){
+        version {
+            strictly("3.0.8")
         }
     }
 }
 
 
+// customizing source-sets to add openapi generated files
+sourceSets {
+    main {
+        java {
+            srcDir("$buildDir/generate-resources/main/src/gen/java/")
+        }
+    }
+}
+
 tasks {
     withType<JavaCompile> {
+        options.release.set(16)
         dependsOn(openApiGenerate)
+//        options.compilerArgs.add("--enable-preview")
         options.encoding = "UTF-8"
         options.compilerArgs.add("-parameters")
+        options.fork(mapOf(Pair("jvmArgs", listOf("--add-opens", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"))))
         finalizedBy("copyOpenapiYaml") // make sure openapi.yaml is copied for Quarkus to pick up
     }
 
     withType<GroovyCompile> {
-
+        options.release.set(16)
+//        options.compilerArgs.add("--enable-preview")
     }
 
     withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
@@ -78,7 +81,3 @@ tasks {
         into(layout.buildDirectory.dir("resources/main/META-INF/"))
     }
 }
-
-
-
-

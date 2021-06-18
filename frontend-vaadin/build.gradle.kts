@@ -2,7 +2,7 @@ plugins {
     id("java")
     id ("org.springframework.boot") version "2.4.5"
     id("com.vaadin") version "0.14.5.1"
-    id("org.openapi.generator") version "5.1.0"
+    id("org.openapi.generator") version "5.1.1"
     id("com.google.cloud.tools.jib") version "3.0.0"
 }
 
@@ -14,8 +14,8 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 val vaadinPlatformGroupId: String by project
@@ -56,6 +56,8 @@ tasks {
         dependsOn(openApiGenerate)
         options.encoding = "UTF-8"
         options.compilerArgs.add("-parameters")
+//        options.forkOptions.jvmArgs?.addAll(listOf("--add-opens", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"))
+        options.fork(mapOf(Pair("jvmArgs", listOf("--add-opens", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"))))
     }
     withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
         generatorName.set("java")

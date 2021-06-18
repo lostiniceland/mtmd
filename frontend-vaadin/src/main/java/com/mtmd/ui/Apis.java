@@ -2,11 +2,15 @@ package com.mtmd.ui;
 
 import com.mtmd.ui.infrastructure.client.ApiClient;
 import com.mtmd.ui.infrastructure.client.gen.V1IceApi;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
@@ -28,14 +32,15 @@ public class Apis {
     }
 
     private OkHttpClient createOkHttpClient() {
-        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        OkHttpClient.Builder client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @NotNull
+                    @Override
+                    public Response intercept(@NotNull Chain chain) throws IOException {
+                        return null;
+                    }
+                });
         return client.build();
-    }
-
-
-
-    OkHttpClient getOkHttpClient() {
-        return okHttpClient;
     }
 
 

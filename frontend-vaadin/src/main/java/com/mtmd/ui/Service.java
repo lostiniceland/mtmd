@@ -37,6 +37,9 @@ public class Service {
         try {
             apis.getIceApi().createIce(ice);
             created = apis.getIceApi().getIceByName(ice.getName());
+        } catch(ApiException e){
+            logger.error("Could not create new ice!", e);
+            throw new BackendException(String.format("Could not create new ice! %s", e.getResponseBody()));
         } catch (Exception e) {
             logger.error("Could not create new ice!", e);
             throw new BackendException(e.getMessage());

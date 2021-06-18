@@ -82,6 +82,10 @@ Flyway add a some tables to keep track of which files have already been applied 
 IMPORTANT: Never change SQL files which have already been executed on a remote machine (which you cannot reset). Flyway compares a file hash with an entry in the db-migration-table and fails if they don't match. Hence, it is also important
 to make sure the files have always the same line-endings (preferably never Windows).
 
+----
+include::build.gradle.kts[]
+----
+
 === Hexagonal Architecture
 
 NOTE: This section currently only applies to the backend to make a point. The frontend is more hacked together :-)
