@@ -1,0 +1,158 @@
+== Evaluate Package-Dependencies
+
+// tag::packageStructure[]
+[[packages:Structures]]
+[role=group,includesConstraints="structure:IllegalConnectionApplicationToInfrastructure,structure:IllegalConnectionInfrastructureToInfrastructure,structure:IllegalConnectionDomainToInfrastructure"]
+
+This section describes the rules for relations between packages.
+// end::packageStructure[]
+
+
+// tag::structureRootPackageComponent[]
+[[structure:RootPackageComponent]]
+[source,cypher,role=concept,requiresConcepts="artifacts:Application"]
+.All direct sub-packages in the `mtmd`-package (`com.mtmd`) of the artefact are going to be labeled as `RootPackage`.
+----
+MATCH
+  (:Application:Artifact)-[:CONTAINS]->(basePackage:Package)-[:CONTAINS]->(rootPackage:Package)
+WHERE
+  basePackage.fqn = "com.mtmd"
+SET
+  rootPackage:RootPackage
+RETURN
+  rootPackage as RootPackage
+ORDER BY
+  rootPackage.name desc
+----
+// end::structureRootPackageComponent[]
+
+
+// tag::structureRootPackageDependencies[]
+[[structure:RootPackageDependencies]]
+[source,cypher,role=concept,requiresConcepts="structure:RootPackageComponent"]
+.A root-package is depending on another root-package, in case there is a dependency on the package at the type-level (:Class, :Interface, :Enum or :Annotation). Those dependencies are declared as relations of the type `DEPENDS_ON_COMPONENT`.
+----
+MATCH
+  (c1:RootPackage)-[:CONTAINS*]->(t1:Type),
+  (c2:RootPackage)-[:CONTAINS*]->(t2:Type),
+  (t1)-[:DEPENDS_ON]->(t2)
+WHERE
+  c1 <> c2
+WITH
+  c1, c2, count(*) as weight
+MERGE
+  (c1)-[d:DEPENDS_ON_COMPONENT]->(c2)
+SET
+  d.weight = weight
+RETURN
+  c1 as Package, c2 as PackageDependency, d as Dependency
+----
+// end::structureRootPackageDependencies[]
+
+
+// tag::structureApplicationComponent[]
+[[structure:ApplicationComponent]]
+[source,cypher,role=concept,requiresConcepts="artifacts:Application"]
+.All direct sub-packages of the `application`-package are labeled as `ApplicationPackage`
+----
+MATCH
+  (:Application:Artifact)-[:CONTAINS]->(package:Package)-[:CONTAINS]->(component:Package)
+WHERE
+  package.fqn = "com.mtmd.application"
+SET
+  component:ApplicationPackage
+RETURN
+  component as ApplicationPackage
+----
+// end::structureApplicationComponent[]
+
+// tag::structureDomainComponent[]
+[[structure:DomainComponent]]
+[source,cypher,role=concept,requiresConcepts="artifacts:Application"]
+.All direct sub-packages of the `domain`-package are labeled as `DomainPackage`
+----
+MATCH
+  (:Application:Artifact)-[:CONTAINS]->(package:Package)-[:CONTAINS]->(component:Package)
+WHERE
+  package.fqn = "com.mtmd.domain"
+SET
+  component:DomainPackage
+RETURN
+  component as DomainPackage
+----
+// end::structureDomainComponent[]
+
+
+// tag::structureInfrastructureComponent[]
+[[structure:InfrastructureComponent]]
+[source,cypher,role=concept,requiresConcepts="artifacts:Application"]
+.All direct sub-packages of the `infrastructure`-package are labeled as `InfrastructurePackage`
+----
+MATCH
+  (:Application:Artifact)-[:CONTAINS]->(package:Package)-[:CONTAINS]->(component:Package)
+WHERE
+  package.fqn = "com.mtmd.infrastructure"
+SET
+  component:InfrastructurePackage
+RETURN
+  component as InfrastructurePackage
+----
+// end::structureInfrastructureComponent[]
+
+
+// tag::structureInfrastructurePackageDependsOnInfrastructurePackage[]
+[[structure:IllegalConnectionInfrastructureToInfrastructure]]
+[source,cypher,role=constraint,requiresConcepts="structure:InfrastructureComponent",severity="blocker"]
+.An infrastructure-package must not have a dependency on another infrastructure-package.
+----
+MATCH
+  (c1:InfrastructurePackage)-[:CONTAINS*]->(t1:Type),
+  (c2:InfrastructurePackage)-[:CONTAINS*]->(t2:Type),
+  (t1)-[:DEPENDS_ON]->(t2)
+WHERE
+  c1 <> c2
+RETURN
+  c1 as InfrastructurePackage, c2 as ForbiddenInfrastructurePackageDependency, t1 as Type, collect(t2) as ForbiddenTypeDependencies
+----
+// end::structureInfrastructurePackageDependsOnInfrastructurePackage[]
+
+
+// tag::structureApplicationDependsOnInfrastructure[]
+[[structure:IllegalConnectionApplicationToInfrastructure]]
+[source,cypher,role=constraint,requiresConcepts="structure:RootPackageDependencies",severity="blocker"]
+.The application-package must not have a dependency on a infrastructure-package.
+----
+MATCH
+  (c1:RootPackage)-[:DEPENDS_ON_COMPONENT]->(c2:RootPackage)
+WITH
+  c1, c2
+MATCH
+  (c1)-[:CONTAINS*]->(t1:Type),
+  (c2)-[:CONTAINS*]->(t2:Type),
+  (t1)-[:DEPENDS_ON]->(t2)
+WHERE
+  c1.name = "application" and c2.name = "infrastructure"
+RETURN
+  c1 as Package, c2 as ForbiddenPackageDependency, t1 as Type, collect(t2) as ForbiddenTypeDependencies
+----
+// end::structureApplicationDependsOnInfrastructure[]
+
+// tag::structureDomainDependsOnInfrastructure[]
+[[structure:IllegalConnectionDomainToInfrastructure]]
+[source,cypher,role=constraint,requiresConcepts="structure:RootPackageDependencies",severity="blocker"]
+.The domain-package must not have a dependency on a infrastructure-package.
+----
+MATCH
+  (c1:RootPackage)-[:DEPENDS_ON_COMPONENT]->(c2:RootPackage)
+WITH
+  c1, c2
+MATCH
+  (c1)-[:CONTAINS*]->(t1:Type),
+  (c2)-[:CONTAINS*]->(t2:Type),
+  (t1)-[:DEPENDS_ON]->(t2)
+WHERE
+  c1.name = "domain" and c2.name = "infrastructure"
+RETURN
+  c1 as Package, c2 as ForbiddenPackageDependency, t1 as Type, collect(t2) as ForbiddenTypeDependencies
+----
+// end::structureDomainDependsOnInfrastructure[]

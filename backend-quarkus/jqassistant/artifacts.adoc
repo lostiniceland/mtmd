@@ -1,0 +1,15 @@
+== Ermittlung der zu prüfenden Artefakte
+
+[[artifacts:Application]]
+[source,cypher,role=concept]
+.We are only interested in the application jar, not all the other Quarkus libs.
+----
+MATCH
+    (artifact:Artifact)
+WHERE
+    artifact.fileName =~ ".*backend-quarkus.*"
+SET
+    artifact:Application
+RETURN
+    artifact as Application
+----

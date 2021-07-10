@@ -1,0 +1,16 @@
+= Architectural Constraints
+
+:toc:
+:description: In AsciiDoc embedded rules for verifying quality by using JQAssistant.
+
+// tag::default[]
+[[default]]
+[role=group,includesGroups="packages:Structures"]
+== Index
+
+- <<packages:Structures>>
+
+// end::default[]
+
+include::artifacts.adoc[]
+include::package-dependencies.adoc[]

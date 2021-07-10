@@ -3,6 +3,7 @@ plugins {
     id("io.quarkus")
     groovy
     id("org.openapi.generator") version "5.1.1"
+    id("de.kontext_e.jqassistant.gradle") version "1.0.0-SNAPSHOT"
 }
 
 repositories {
@@ -15,6 +16,16 @@ val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 val mapstructVersion = "1.4.2.Final"
+val jqaVersion = "1.8.0"
+val jqaPluginVersion = "1.8.0"
+
+
+jqassistant {
+    toolVersion = jqaVersion
+    plugins("com.buschmais.jqassistant.plugin:junit:${jqaVersion}")
+    plugins("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${jqaPluginVersion}")
+    options("-reset")
+}
 
 dependencies {
     implementation(platform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
