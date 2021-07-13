@@ -3,10 +3,12 @@
 :toc:
 :description: In AsciiDoc embedded rules for verifying quality by using JQAssistant.
 
+The Neo4J cypher rules embedded in this section are parsed by JQAssistant and applied to the codebase.
+
 // tag::default[]
 [[default]]
 [role=group,includesGroups="packages:Structures"]
-== Index
+== Rule Index
 
 - <<packages:Structures>>
 

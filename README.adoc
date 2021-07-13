@@ -126,10 +126,11 @@ Documentation should not live outside the code repository. By using a simple htt
 $ ./gradlew asciidoctorPdf
 ----
 
+include::backend-quarkus/jqassistant/index.adoc[leveloffset=+2]
+
+
 === Pinned Build-Tool Version
 Using Maven, Gradle or any other build tool is nice, but still leaves room for inconsistencies when different tool versions are used.
 Gradle (and also by now Maven) support the idea of a wrapper. They come in the form of little shell/bat scripts which read
 a properties file to determine the version of the build-tool to use. Then the wrapper will download this version within
 the project and execute the given task.
-
-This project is current pinned to Gradle 6.8.3. Just to give an example: Gradle 7.0 breaks the openapi-gradle-plugin :-)

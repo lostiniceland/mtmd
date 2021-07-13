@@ -1,4 +1,4 @@
-== Ermittlung der zu prüfenden Artefakte
+== Evaluate Artifacts
 
 [[artifacts:Application]]
 [source,cypher,role=concept]
