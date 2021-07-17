@@ -1,34 +1,46 @@
+buildscript {
+    dependencies {
+        // commenting this shows the original dependency-hell
+        classpath("com.buschmais.jqassistant.cli:application:1.10.0") {
+            exclude("org.slf4j", "slf4j-simple") // For excluding baz from bar but not if brought elsewhere
+        }
+    }
+}
+
 plugins {
     java
     id("io.quarkus")
     groovy
     id("org.openapi.generator") version "5.1.1"
-    id("de.kontext_e.jqassistant.gradle") version "1.0.0-SNAPSHOT"
+    id("de.kontext_e.jqassistant.gradle") version "1.0.1"
 }
+
 
 repositories {
     mavenLocal()
     mavenCentral()
+    gradlePluginPortal()
 }
-
 
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 val mapstructVersion = "1.4.2.Final"
-val jqaVersion = "1.8.0"
-val jqaPluginVersion = "1.8.0"
+val jqaVersion = "1.10.0"
 
 
 jqassistant {
     toolVersion = jqaVersion
     plugins("com.buschmais.jqassistant.plugin:junit:${jqaVersion}")
-    plugins("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:${jqaPluginVersion}")
+    plugins("com.buschmais.jqassistant.plugin:jpa2:${jqaVersion}")
+    plugins("de.kontext-e.jqassistant.plugin:jqassistant.plugin.git:1.8.0")
+    scanDirs("../.git")
+    scanDirs("java:classpath::../build/classes/java/main")
     options("-reset")
 }
 
 dependencies {
-    implementation(platform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
+    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy")
     implementation("io.quarkus:quarkus-smallrye-openapi")
@@ -44,11 +56,6 @@ dependencies {
     annotationProcessor( "org.mapstruct:mapstruct-processor:$mapstructVersion" )
     testImplementation("io.rest-assured:rest-assured")
     testImplementation("org.spockframework:spock-core:2.0-groovy-3.0")
-    testImplementation("org.codehaus.groovy:groovy"){
-        version {
-            strictly("3.0.8")
-        }
-    }
 }
 
 
